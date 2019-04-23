@@ -20,12 +20,10 @@ class Entry(Model):
     class Meta:
         database = db
         
-
 def initialize():
     """Create the database and the table if they don't exist."""
     db.connect()
     db.create_tables([Entry], safe=True)
-
 
 
 def menu_loop():
@@ -60,9 +58,16 @@ def add_entry():
     
     if task:
         if input('Save entry? [Y/n] ').lower() != 'n':
-            Entry.create(content=task,date=date_completed, timespent=time_spent, notes=notes_taken, employee=name )
+            Entry.create(content=task,date=date_completed, timespent=time_spent, notes=notes_taken, employee=name)
             return print("Saved successfully!")
    
+
+def view_employee_entries():
+    query = Entry.select(Entry.employee).distinct()
+    for idx, x in enumerate(query):
+        print("%d) %s" % (int(idx)+1, x.employee))
+    view_entries(input('Enter employee name to search by: '))           
+    
 
 def view_entries(search_query=None):
     """View previous entries."""
@@ -74,18 +79,19 @@ def view_entries(search_query=None):
         Entry.date.contains(search_query) |
         Entry.notes.contains(search_query) |
         Entry.timespent.contains(search_query)
-        )
-        
+        )       
         
     for entry in entries:
         timestamp = entry.timestamp.strftime('%A %B %d, %Y %I:%M%p')
-        print(timestamp)
+        print("\n" + timestamp)
         print('='*len(timestamp) + "\n")
+
         print("Employee Name: {}".format(entry.employee))
         print("Task Completed: {}".format(entry.content))
         print("Date Completed: {}".format(entry.date))
         print("Total Timespent: {}".format(entry.timespent))
         print("Notes Completed: {}".format(entry.notes) + "\n")
+
         print('='*len(timestamp))
         
         print('n) next entry')
@@ -98,7 +104,6 @@ def view_entries(search_query=None):
         elif next_action == 'd':
             delete_entry(entry)
 
-       
 
 def get_date():	
     # repeat all this logic until its valid	
@@ -118,9 +123,14 @@ def get_date():
 
 def search_entries():
     """Search entries for a string."""
-    view_entries(input('Search query (i.e. employee name, date, or subject): '))
+    print("Would you like to search by A) Viewing all employees B) Search term? ")
+    answer = input("Answer: ").upper()
+    if answer == "A":
+        view_employee_entries()
+    if answer == "B":                                
+        view_entries(input('Search query (i.e. employee name, date, or subject): '))
+                                  
 
-    
 def delete_entry(entry):
     """Delete an entry."""
     if input("Are you sure? [yN] ").lower() == 'y':
