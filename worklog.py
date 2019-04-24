@@ -38,28 +38,26 @@ def menu_loop():
         
         if choice in menu:
             menu[choice]()
-
+        return choice    
 
 def add_entry():
     """Add an entry."""
 
-    name = input("1) Enter your full name: ")
+    name = input("Enter your full name: ")
     
-    print("2) Enter you task: Press ctrl+d when finished. ")
-    task = sys.stdin.read().strip()
+    task = input("Enter your task: ")
 
     date_completed = get_date()
     
-    print("3) Enter the time spent: ")
     time_spent = input("Time spent in HH:MM: ")
     
-    print("4) Add notes: Press ctrl+d when finished. ")
-    notes_taken = sys.stdin.read().strip()
+    notes_taken = input("Enter your notes: Press ctrl+d when finished. ")
     
     if task:
         if input('Save entry? [Y/n] ').lower() != 'n':
             Entry.create(content=task,date=date_completed, timespent=time_spent, notes=notes_taken, employee=name)
-            return print("Saved successfully!")
+            print("Saved successfully!")
+    return task
    
 
 def view_employee_entries():
