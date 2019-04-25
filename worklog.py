@@ -38,7 +38,7 @@ def menu_loop():
         
         if choice in menu:
             menu[choice]()
-        return choice    
+    return choice         
 
 def add_entry():
     """Add an entry."""
@@ -51,7 +51,7 @@ def add_entry():
     
     time_spent = input("Time spent in HH:MM: ")
     
-    notes_taken = input("Enter your notes: Press ctrl+d when finished. ")
+    notes_taken = input("Enter your notes: ")
     
     if task:
         if input('Save entry? [Y/n] ').lower() != 'n':
